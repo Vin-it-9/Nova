@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId = "com.nova.ai.assistant"
-        minSdk = 33
-        targetSdk = 33
+        minSdk = 35
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -32,8 +32,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     externalNativeBuild {
         cmake {
@@ -41,13 +41,11 @@ android {
             version = "3.22.1"
         }
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 kotlin {
-    jvmToolchain(17)
+    // Upgraded toolchain to compile using Java 21
+    jvmToolchain(21)
 }
 
 dependencies {
