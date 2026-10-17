@@ -75,7 +75,8 @@ internal enum class EvIcon {
     Microphone,
     Account,
     ChevronRight,
-    Send
+    Send,
+    Info
 }
 
 /** A 48 dp minimum-touch-target icon button with restrained press feedback. */
@@ -211,6 +212,27 @@ internal fun EvIcon(
                 }
                 drawPath(path, tint, style = Stroke(width = stroke, cap = StrokeCap.Round, join = StrokeJoin.Round))
                 drawLine(tint, Offset(w * 0.48f, h * 0.57f), Offset(w * 0.84f, h * 0.16f), stroke, StrokeCap.Round)
+            }
+
+            EvIcon.Info -> {
+                drawCircle(
+                    color = tint,
+                    radius = size.minDimension * 0.40f,
+                    center = Offset(w * 0.50f, h * 0.50f),
+                    style = Stroke(stroke)
+                )
+                drawCircle(
+                    color = tint,
+                    radius = stroke * 0.85f,
+                    center = Offset(w * 0.50f, h * 0.35f)
+                )
+                drawLine(
+                    color = tint,
+                    start = Offset(w * 0.50f, h * 0.47f),
+                    end = Offset(w * 0.50f, h * 0.68f),
+                    strokeWidth = stroke,
+                    cap = StrokeCap.Round
+                )
             }
         }
     }
