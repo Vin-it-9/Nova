@@ -23,13 +23,17 @@ import androidx.compose.ui.unit.IntOffset
 import com.ev.ai.assistant.ui.screens.HomeScreen
 import com.ev.ai.assistant.ui.screens.SettingsScreen
 import com.ev.ai.assistant.ui.screens.settings.AboutScreen
+import com.ev.ai.assistant.ui.screens.settings.PermissionsScreen
+import com.ev.ai.assistant.ui.screens.settings.VoiceWakeUpScreen
 import com.ev.ai.assistant.ui.util.OneUiColors
 import com.ev.ai.assistant.ui.util.OneUiMotion
 
 enum class AppScreen {
     Home,
     Settings,
-    About
+    About,
+    Permissions,
+    VoiceWakeUp
 }
 
 @Composable
@@ -39,6 +43,8 @@ fun EvApp() {
 
     BackHandler(enabled = currentScreen != AppScreen.Home) {
         currentScreen = when (currentScreen) {
+            AppScreen.VoiceWakeUp -> AppScreen.Settings
+            AppScreen.Permissions -> AppScreen.Settings
             AppScreen.About -> AppScreen.Settings
             AppScreen.Settings -> AppScreen.Home
             AppScreen.Home -> AppScreen.Home
@@ -108,9 +114,17 @@ fun EvApp() {
                     )
                     AppScreen.Settings -> SettingsScreen(
                         onBack = { currentScreen = AppScreen.Home },
-                        onOpenAbout = { currentScreen = AppScreen.About }
+                        onOpenAbout = { currentScreen = AppScreen.About },
+                        onOpenPermissions = { currentScreen = AppScreen.Permissions },
+                        onOpenVoiceWakeUp = { currentScreen = AppScreen.VoiceWakeUp }
                     )
                     AppScreen.About -> AboutScreen(
+                        onBack = { currentScreen = AppScreen.Settings }
+                    )
+                    AppScreen.Permissions -> PermissionsScreen(
+                        onBack = { currentScreen = AppScreen.Settings }
+                    )
+                    AppScreen.VoiceWakeUp -> VoiceWakeUpScreen(
                         onBack = { currentScreen = AppScreen.Settings }
                     )
                 }

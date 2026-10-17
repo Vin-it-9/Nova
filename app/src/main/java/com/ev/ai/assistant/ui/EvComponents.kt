@@ -76,7 +76,8 @@ internal enum class EvIcon {
     Account,
     ChevronRight,
     Send,
-    Info
+    Info,
+    Check
 }
 
 /** A 48 dp minimum-touch-target icon button with restrained press feedback. */
@@ -233,6 +234,11 @@ internal fun EvIcon(
                     strokeWidth = stroke,
                     cap = StrokeCap.Round
                 )
+            }
+
+            EvIcon.Check -> {
+                drawLine(tint, Offset(w * 0.22f, h * 0.52f), Offset(w * 0.42f, h * 0.72f), stroke, StrokeCap.Round)
+                drawLine(tint, Offset(w * 0.42f, h * 0.72f), Offset(w * 0.78f, h * 0.32f), stroke, StrokeCap.Round)
             }
         }
     }
@@ -651,6 +657,9 @@ internal fun ToggleRow(
 ) {
     var checked by rememberSaveable(title, initiallyChecked) {
         mutableStateOf(initiallyChecked)
+    }
+    androidx.compose.runtime.LaunchedEffect(initiallyChecked) {
+        checked = initiallyChecked
     }
     val interactionSource = remember { MutableInteractionSource() }
 

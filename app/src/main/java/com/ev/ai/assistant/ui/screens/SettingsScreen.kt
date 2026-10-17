@@ -15,8 +15,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.ev.ai.assistant.data.preferences.rememberEvPreferences
 import com.ev.ai.assistant.ui.AccountCard
 import com.ev.ai.assistant.ui.EvIcon
 import com.ev.ai.assistant.ui.EvIconButton
@@ -32,12 +34,22 @@ import com.ev.ai.assistant.ui.util.OneUiTypography
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
-    onOpenAbout: () -> Unit = {}
+    onOpenAbout: () -> Unit = {},
+    onOpenPermissions: () -> Unit = {},
+    onOpenVoiceWakeUp: () -> Unit = {}
 ) {
     val darkTheme = isSystemInDarkTheme()
     val bgColor = if (darkTheme) OneUiColors.BackgroundDark else OneUiColors.BackgroundLight
     val textPrimary = if (darkTheme) OneUiColors.TextPrimaryDark else OneUiColors.TextPrimaryLight
     val textSecondary = if (darkTheme) OneUiColors.TextSecondaryDark else OneUiColors.TextSecondaryLight
+
+    val preferences = rememberEvPreferences()
+    val isWakeUpEnabled by preferences.voiceWakeUpEnabledState
+    val wakeUpWord by preferences.wakeUpWordState
+    val fullVoiceResponses by preferences.fullVoiceResponsesState
+    val soundFeedback by preferences.soundFeedbackState
+    val useWhileLocked by preferences.useWhileLockedState
+    val newsAndOffers by preferences.newsAndOffersState
 
     Column(
         modifier = Modifier
@@ -67,7 +79,11 @@ fun SettingsScreen(
 
         SettingsSectionTitle("Wake up EV")
         SettingsCard {
-            SettingsRow("Voice wake-up", "EV")
+            SettingsRow(
+                title = "Voice wake-up",
+                subtitle = if (isWakeUpEnabled) wakeUpWord else "Off",
+                onClick = onOpenVoiceWakeUp
+            )
             SettingsDivider()
             SettingsRow("Side button")
         }
@@ -76,13 +92,21 @@ fun SettingsScreen(
         SettingsCard {
             SettingsRow("Language and voice style")
             SettingsDivider()
-            ToggleRow("Full voice responses", true)
+            ToggleRow(
+                title = "Full voice responses",
+                initiallyChecked = fullVoiceResponses,
+                onCheckedChange = { preferences.fullVoiceResponses = it }
+            )
         }
 
         Spacer(Modifier.height(OneUiDimensions.Space5))
 
         SettingsCard {
-            ToggleRow("Sound feedback", true)
+            ToggleRow(
+                title = "Sound feedback",
+                initiallyChecked = soundFeedback,
+                onCheckedChange = { preferences.soundFeedback = it }
+            )
             Text(
                 text = "Play a sound when EV starts and stops listening.",
                 color = textSecondary,
@@ -97,15 +121,18 @@ fun SettingsScreen(
 
         Spacer(Modifier.height(OneUiDimensions.Space5))
 
-        SettingsCard { ToggleRow("Use while locked", true) }
+        SettingsCard {
+            ToggleRow(
+                title = "Use while locked",
+                initiallyChecked = useWhileLocked,
+                onCheckedChange = { preferences.useWhileLocked = it }
+            )
+        }
 
         SettingsSectionTitle("Privacy")
         SettingsCard {
-            SettingsRow("Privacy settings")
             SettingsDivider()
-            SettingsRow("Privacy Notice")
-            SettingsDivider()
-            SettingsRow("Permissions")
+            SettingsRow("Permissions", onClick = onOpenPermissions)
         }
 
         Spacer(Modifier.height(OneUiDimensions.Space6))
