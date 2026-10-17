@@ -105,8 +105,6 @@ fun SettingsScreen(
             SettingsDivider()
             SettingsRow("Privacy Notice")
             SettingsDivider()
-            ToggleRow("Get news and special offers", false)
-            SettingsDivider()
             SettingsRow("Permissions")
         }
 
