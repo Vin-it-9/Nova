@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
@@ -59,6 +58,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.style.TextOverflow
 import com.ev.ai.assistant.ui.util.OneUiColors
 import com.ev.ai.assistant.ui.util.OneUiDimensions
 import com.ev.ai.assistant.ui.util.OneUiElevation
@@ -89,7 +89,7 @@ internal fun EvIconButton(
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
         targetValue = if (isPressed && enabled) 0.94f else 1f,
-        animationSpec = OneUiMotion.PressSpring,
+        animationSpec = OneUiMotion.shortSpec(),
         label = "ev_icon_button_scale"
     )
     Box(
@@ -116,7 +116,7 @@ internal fun EvIconButton(
     ) {
         EvIcon(
             icon = icon,
-            modifier = Modifier.size(OneUiDimensions.IconMedium),
+            modifier = Modifier.size(OneUiDimensions.IconLarge),
             tint = if (enabled) tint else tint.copy(alpha = 0.38f)
         )
     }
@@ -130,7 +130,7 @@ internal fun EvIcon(
     tint: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Canvas(modifier) {
-        val stroke = 2.dp.toPx()
+        val stroke = (OneUiDimensions.Space1 / 2).toPx()
         val w = size.width
         val h = size.height
 
@@ -226,7 +226,9 @@ internal fun EvMark(
     }
 
     Canvas(markModifier) {
-        val stroke = (size.minDimension * 0.105f).coerceAtLeast(1.5.dp.toPx())
+        val stroke = (size.minDimension * 0.105f).coerceAtLeast(
+            (OneUiDimensions.Space1 / 2).toPx()
+        )
         val path = Path().apply {
             moveTo(size.width * 0.24f, size.height * 0.25f)
             lineTo(size.width * 0.68f, size.height * 0.25f)
@@ -274,21 +276,30 @@ internal fun AskBar(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = OneUiDimensions.Space4, vertical = OneUiDimensions.Space2),
+            .padding(
+                horizontal = OneUiDimensions.ScreenHorizontalCompact,
+                vertical = OneUiDimensions.Space2
+            ),
         shape = shape,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface.copy(
+                alpha = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+                    OneUiElevation.SurfaceAlphaDark
+                } else {
+                    OneUiElevation.SurfaceAlphaLight
+                }
+            )
         ),
         border = BorderStroke(
             width = OneUiElevation.Hairline,
             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = OneUiElevation.BorderAlphaLight)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = OneUiElevation.None)
+        elevation = CardDefaults.cardElevation(defaultElevation = OneUiElevation.Floating)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 64.dp)
+                .heightIn(min = OneUiDimensions.ComposerMinimumHeight)
                 .padding(horizontal = OneUiDimensions.Space2),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -347,7 +358,7 @@ internal fun AskBar(
                 Box(
                     modifier = Modifier
                         .size(OneUiDimensions.IconButton)
-                        .clip(OneUiShapes.IconButton),
+                        .clip(OneUiShapes.Full),
                     contentAlignment = Alignment.Center
                 ) {
                     Box(
@@ -376,6 +387,7 @@ internal fun AskBar(
     }
 }
 
+
 @Composable
 internal fun SuggestionPill(
     text: String,
@@ -383,12 +395,15 @@ internal fun SuggestionPill(
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+
     val isPressed by interactionSource.collectIsPressedAsState()
+
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.985f else 1f,
         animationSpec = OneUiMotion.PressSpring,
         label = "suggestion_pill_scale"
     )
+
     val shape = OneUiShapes.Suggestion
 
     Row(
@@ -396,9 +411,13 @@ internal fun SuggestionPill(
             .fillMaxWidth()
             .scale(scale)
             .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f))
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant
+                    .copy(alpha = 0.62f),
+                shape = shape
+            )
             .border(
-                width = 1.dp,
+                width = OneUiElevation.Hairline,
                 color = borderColor.copy(alpha = 0.9f),
                 shape = shape
             )
@@ -408,15 +427,25 @@ internal fun SuggestionPill(
                 role = Role.Button,
                 onClick = onClick
             )
-            .semantics { contentDescription = text }
-            .heightIn(min = 52.dp)
-            .padding(horizontal = OneUiDimensions.Space4, vertical = OneUiDimensions.Space3),
+            .semantics {
+                contentDescription = text
+            }
+            .heightIn(
+                min = OneUiDimensions.MinimumTouchTarget
+            )
+            .padding(
+                horizontal = OneUiDimensions.Space4,
+                vertical = OneUiDimensions.Space3
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = text,
+            modifier = Modifier.weight(1f),
             color = MaterialTheme.colorScheme.onSurface,
-            style = OneUiTypography.Label
+            style = OneUiTypography.Label,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -432,7 +461,7 @@ internal fun AccountCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(OneUiShapes.Card)
+                .clip(OneUiShapes.CardCompact)
                 .clickable(
                     interactionSource = interactionSource,
                     indication = ripple(),
@@ -463,7 +492,7 @@ internal fun AccountCard(
 
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(OneUiDimensions.Space1)
             ) {
                 Text(
                     text = "Google account",
@@ -510,13 +539,19 @@ internal fun SettingsCard(content: @Composable () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         shape = OneUiShapes.Card,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface.copy(
+                alpha = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+                    OneUiElevation.SurfaceAlphaDark
+                } else {
+                    OneUiElevation.SurfaceAlphaLight
+                }
+            )
         ),
         border = BorderStroke(
             width = OneUiElevation.Hairline,
             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = OneUiElevation.BorderAlphaDark)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = OneUiElevation.None)
+        elevation = CardDefaults.cardElevation(defaultElevation = OneUiElevation.Raised)
     ) {
         Column { content() }
     }
@@ -549,9 +584,10 @@ internal fun SettingsRow(
                 Modifier
             }
         )
+        .heightIn(min = OneUiDimensions.MinimumTouchTarget)
         .padding(
-            horizontal = OneUiDimensions.ListItemHorizontal,
-            vertical = OneUiDimensions.ListItemVertical
+        horizontal = OneUiDimensions.ListItemHorizontal,
+        vertical = OneUiDimensions.ListItemVertical
         )
 
     Row(
@@ -567,7 +603,7 @@ internal fun SettingsRow(
                 style = OneUiTypography.BodyMedium
             )
             if (!subtitle.isNullOrBlank()) {
-                Spacer(Modifier.height(3.dp))
+                Spacer(Modifier.height(OneUiDimensions.Space1))
                 Text(
                     text = subtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
@@ -579,7 +615,7 @@ internal fun SettingsRow(
         }
 
         if (!trailingText.isNullOrBlank()) {
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(OneUiDimensions.Space3))
             Text(
                 text = trailingText,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -588,10 +624,10 @@ internal fun SettingsRow(
         }
 
         if (onClick != null) {
-            Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(OneUiDimensions.Space1))
             EvIcon(
                 icon = EvIcon.ChevronRight,
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(OneUiDimensions.IconSmall),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(
                     alpha = if (enabled) 1f else 0.45f
                 )
@@ -617,7 +653,7 @@ internal fun ToggleRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(OneUiShapes.InnerContainer)
             .toggleable(
                 value = checked,
                 enabled = enabled,
@@ -629,7 +665,13 @@ internal fun ToggleRow(
                     onCheckedChange(newValue)
                 }
             )
-            .padding(start = 18.dp, end = 14.dp, top = 12.dp, bottom = 12.dp),
+            .heightIn(min = OneUiDimensions.MinimumTouchTarget)
+            .padding(
+                start = OneUiDimensions.ListItemHorizontal,
+                end = OneUiDimensions.Space3,
+                top = OneUiDimensions.Space3,
+                bottom = OneUiDimensions.Space3
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -638,35 +680,48 @@ internal fun ToggleRow(
                 color = MaterialTheme.colorScheme.onSurface.copy(
                     alpha = if (enabled) 1f else 0.45f
                 ),
-                fontSize = 15.sp,
-                lineHeight = 21.sp,
-                fontWeight = FontWeight.Medium
+                style = OneUiTypography.BodyMedium
             )
             if (!subtitle.isNullOrBlank()) {
-                Spacer(Modifier.height(3.dp))
+                Spacer(Modifier.height(OneUiDimensions.Space1))
                 Text(
                     text = subtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(
                         alpha = if (enabled) 1f else 0.45f
                     ),
-                    fontSize = 13.sp,
-                    lineHeight = 18.sp
+                    style = OneUiTypography.Caption
                 )
             }
         }
 
-        Spacer(Modifier.width(16.dp))
+        Spacer(Modifier.width(OneUiDimensions.Space4))
 
         Switch(
             checked = checked,
             onCheckedChange = null,
             enabled = enabled,
+            modifier = Modifier
+                .size(
+                    width = OneUiDimensions.SwitchWidth,
+                    height = OneUiDimensions.SwitchHeight
+                )
+                .scale(
+                    animateFloatAsState(
+                        targetValue = if (checked) 0.70f else 0.70f,
+                        animationSpec = OneUiMotion.ControlSpring,
+                        label = "switch_scale"
+                    ).value
+                ),
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
-                checkedTrackColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = OneUiColors.ControlActive,
                 checkedBorderColor = Color.Transparent,
                 uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                uncheckedTrackColor = if (androidx.compose.foundation.isSystemInDarkTheme()) {
+                    OneUiColors.ControlTrackDark
+                } else {
+                    OneUiColors.ControlTrackLight
+                },
                 uncheckedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                 disabledCheckedThumbColor = Color.White.copy(alpha = 0.7f),
                 disabledCheckedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.35f),
@@ -682,8 +737,12 @@ internal fun SettingsDivider(modifier: Modifier = Modifier) {
     Spacer(
         modifier
             .fillMaxWidth()
-            .padding(horizontal = 18.dp)
-            .height(1.dp)
-            .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.58f))
+            .padding(horizontal = OneUiDimensions.DividerHorizontal)
+            .height(OneUiElevation.Hairline)
+            .background(
+                MaterialTheme.colorScheme.outlineVariant.copy(
+                    alpha = OneUiElevation.BorderAlphaDark
+                )
+            )
     )
 }

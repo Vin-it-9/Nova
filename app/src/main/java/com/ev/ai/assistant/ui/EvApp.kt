@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -34,8 +36,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,31 +73,7 @@ fun EvApp() {
         showSettings = false
     }
 
-    val colorScheme = if (darkTheme) {
-        darkColorScheme(
-            primary = OneUiColors.PrimaryDark,
-            background = OneUiColors.BackgroundDark,
-            surface = OneUiColors.SurfaceDark,
-            surfaceVariant = OneUiColors.SurfaceVariantDark,
-            onBackground = OneUiColors.TextPrimaryDark,
-            onSurface = OneUiColors.TextPrimaryDark,
-            onSurfaceVariant = OneUiColors.TextSecondaryDark,
-            outline = OneUiColors.DividerDark
-        )
-    } else {
-        lightColorScheme(
-            primary = OneUiColors.PrimaryLight,
-            background = OneUiColors.BackgroundLight,
-            surface = OneUiColors.SurfaceLight,
-            surfaceVariant = OneUiColors.SurfaceVariantLight,
-            onBackground = OneUiColors.TextPrimaryLight,
-            onSurface = OneUiColors.TextPrimaryLight,
-            onSurfaceVariant = OneUiColors.TextSecondaryLight,
-            outline = OneUiColors.DividerLight
-        )
-    }
-
-    MaterialTheme(colorScheme = colorScheme) {
+    MaterialTheme(colorScheme = OneUiColors.colorScheme(darkTheme)) {
         AnimatedContent(
             targetState = showSettings,
             label = "one_ui_screen_transition",
@@ -240,14 +216,15 @@ private fun HomeScreen(
 
     val suggestions = remember {
         listOf(
-            "What is the stock price of Microsoft today?",
-            "Enable vibration for all my alarms",
+            "How are you?",
+            "Set Alarm at 7:00 AM",
             "Turn on Bluetooth"
         )
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         containerColor = bgColor,
         topBar = {
             Row(
@@ -270,15 +247,9 @@ private fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(1.dp)
                 ) {
                     Text(
-                        text = "EV",
+                        text = "E.V.",
                         color = textPrimary,
                         style = OneUiTypography.AppTitle
-                    )
-
-                    Text(
-                        text = "Your AI assistant",
-                        color = textPrimary.copy(alpha = 0.62f),
-                        style = OneUiTypography.Supporting
                     )
                 }
 
@@ -291,6 +262,7 @@ private fun HomeScreen(
                 { input = it },
                 Modifier
                     .fillMaxWidth()
+                    .imePadding()
                     .navigationBarsPadding(),
                 onMicrophoneClick = ::toggleListening,
                 isListening = isListening
@@ -306,9 +278,10 @@ private fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(top = OneUiDimensions.ContentTop)
                     .padding(horizontal = OneUiDimensions.ScreenHorizontal),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Top
             ) {
                 Card(
                     modifier = Modifier
@@ -316,13 +289,19 @@ private fun HomeScreen(
                         .fillMaxWidth(),
                     shape = OneUiShapes.OuterContainer,
                     colors = CardDefaults.cardColors(
-                        containerColor = surfaceColor
+                        containerColor = surfaceColor.copy(
+                            alpha = if (darkTheme) {
+                                OneUiElevation.SurfaceAlphaDark
+                            } else {
+                                OneUiElevation.SurfaceAlphaLight
+                            }
+                        )
                     ),
                     elevation = CardDefaults.cardElevation(
-                        defaultElevation = OneUiElevation.None
+                        defaultElevation = OneUiElevation.Raised
                     ),
                     border = BorderStroke(
-                        width = 1.dp,
+                        width = OneUiElevation.Hairline,
                         color = cardBorderColor
                     )
                 ) {
@@ -334,19 +313,31 @@ private fun HomeScreen(
                                 vertical = OneUiDimensions.CardContentVertical
                             )
                     ) {
+                        val headingGradient = Brush.linearGradient(
+                            colors = if (darkTheme) {
+                                listOf(
+                                    OneUiColors.ControlActive,
+                                    OneUiColors.PrimaryPressedDark,
+                                    OneUiColors.TertiaryAccent
+                                )
+                            } else {
+                                listOf(
+                                    OneUiColors.BrandPrimary,
+                                    OneUiColors.PrimaryActionLight,
+                                    OneUiColors.TertiaryAccent
+                                )
+                            }
+                        )
+
                         Text(
                             text = "You can say",
                             style = TextStyle(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color(0xFF22C7D8),
-                                        primaryAccent
-                                    )
-                                ),
-                                fontSize = OneUiTypography.ScreenTitle.fontSize,
-                                lineHeight = OneUiTypography.ScreenTitle.lineHeight,
-                                fontWeight = OneUiTypography.ScreenTitle.fontWeight,
-                                letterSpacing = OneUiTypography.ScreenTitle.letterSpacing
+                                brush = headingGradient,
+                                fontFamily = OneUiTypography.Display.fontFamily,
+                                fontSize = OneUiTypography.Display.fontSize,
+                                lineHeight = OneUiTypography.Display.lineHeight,
+                                fontWeight = OneUiTypography.Display.fontWeight,
+                                letterSpacing = OneUiTypography.Display.letterSpacing
                             )
                         )
 
@@ -365,7 +356,7 @@ private fun HomeScreen(
                         )
 
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            verticalArrangement = Arrangement.spacedBy(OneUiDimensions.Space3)
                         ) {
                             suggestions.forEachIndexed { index, suggestion ->
                                 SuggestionPill(
@@ -411,7 +402,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
                 text = "EV settings",
                 color = textPrimary,
                 style = OneUiTypography.ScreenTitle,
-                modifier = Modifier.padding(start = 12.dp)
+                modifier = Modifier.padding(start = OneUiDimensions.Space3)
             )
         }
 
@@ -462,7 +453,7 @@ private fun SettingsScreen(onBack: () -> Unit) {
             SettingsRow("Permissions")
         }
 
-        Spacer(Modifier.height(OneUiDimensions.Space4))
+        Spacer(Modifier.height(OneUiDimensions.Space6))
 
         SettingsCard {
             SettingsRow("About EV")
@@ -470,5 +461,6 @@ private fun SettingsScreen(onBack: () -> Unit) {
             SettingsRow("Contact us")
         }
         Spacer(Modifier.height(OneUiDimensions.ContentBottom))
+        Spacer(Modifier.height(OneUiDimensions.Space8))
     }
 }

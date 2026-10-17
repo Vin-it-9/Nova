@@ -5,22 +5,37 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
 /**
- * One UI-inspired corner-radius tokens.
- *
- * Use outer containers for screen-level grouping and inner containers for
- * controls/list content. Keeping these roles named prevents accidental radius
- * drift between screens.
+ * Official Samsung One UI Corner-Radius and Shape Design Tokens.
+ * Ensures consistent structural curvature across custom voice assistant surfaces.
  */
 object OneUiShapes {
-    val OuterContainer: Shape = RoundedCornerShape(26.dp)
-    val InnerContainer: Shape = RoundedCornerShape(16.dp)
-    val Card: Shape = RoundedCornerShape(20.dp)
-    val CardCompact: Shape = RoundedCornerShape(16.dp)
-    val Composer: Shape = RoundedCornerShape(28.dp)
-    val TextField: Shape = RoundedCornerShape(20.dp)
-    val Suggestion: Shape = RoundedCornerShape(16.dp)
-    val ListItem: Shape = RoundedCornerShape(12.dp)
-    val IconButton: Shape = RoundedCornerShape(24.dp)
-    val Avatar: Shape = RoundedCornerShape(16.dp)
+    // --- MAIN WINDOW SURFACES ---
+    // Used for heavy bottom sheet blocks, global dialog frames, and assistant overlay surfaces
+    val OuterContainer: Shape = RoundedCornerShape(OneUiDimensions.RadiusFocusBlockLarge)
+
+    // --- FEATURE CARD GROUPS ---
+    // Standard grouped content grids or settings panel categories
+    val Card: Shape = RoundedCornerShape(OneUiDimensions.RadiusThumbnailMedium)
+
+    // Compact containers, nested tiles, and smaller card focus blocks
+    val CardCompact: Shape = RoundedCornerShape(OneUiDimensions.CardContentHorizontal - 8.dp)
+
+    // --- INTERACTIVE SYSTEM CONTROLS ---
+    // Unified interactive boundaries matching One UI text inputs and search structures
+    val InnerContainer: Shape = RoundedCornerShape(OneUiDimensions.CardContentHorizontal - 8.dp)
+    val TextField: Shape = RoundedCornerShape(OneUiDimensions.CardContentHorizontal - 8.dp)
+    val Composer: Shape = RoundedCornerShape(OneUiDimensions.RadiusFocusBlockLarge)
+
+    // Quick action tags, capsule suggestions, pill filters, and contextual buttons
+    val Suggestion: Shape = RoundedCornerShape(OneUiDimensions.RadiusButton)
+
+    // --- LIST ELEMENTS & DATA BROWSERS ---
+    // Inner rows, list item item selections, and focus grid thumbnails
+    val ListItem: Shape = RoundedCornerShape(OneUiDimensions.RadiusThumbnailSmall)
+    val Avatar: Shape = RoundedCornerShape(OneUiDimensions.RadiusThumbnailSmall)
+
+    // --- SOLID PERIMETER CIRCLES ---
+    // Fully circular components for standard system ripples and media actions
+    val IconButton: Shape = RoundedCornerShape(50)
     val Full: Shape = RoundedCornerShape(50)
 }
