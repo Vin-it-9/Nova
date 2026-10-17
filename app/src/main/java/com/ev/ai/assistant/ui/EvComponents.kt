@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.Image
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +59,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.ev.ai.assistant.ui.util.OneUiColors
 import com.ev.ai.assistant.ui.util.OneUiDimensions
@@ -65,6 +67,7 @@ import com.ev.ai.assistant.ui.util.OneUiElevation
 import com.ev.ai.assistant.ui.util.OneUiMotion
 import com.ev.ai.assistant.ui.util.OneUiShapes
 import com.ev.ai.assistant.ui.util.OneUiTypography
+import com.ev.ai.assistant.R
 
 internal enum class EvIcon {
     Menu,
@@ -218,38 +221,17 @@ internal fun EvMark(
     modifier: Modifier = Modifier,
     contentDescription: String? = "EV logo"
 ) {
-    val primaryColor = MaterialTheme.colorScheme.primary
     val markModifier = if (contentDescription == null) {
         modifier
     } else {
         modifier.semantics { this.contentDescription = contentDescription }
     }
 
-    Canvas(markModifier) {
-        val stroke = (size.minDimension * 0.105f).coerceAtLeast(
-            (OneUiDimensions.Space1 / 2).toPx()
-        )
-        val path = Path().apply {
-            moveTo(size.width * 0.24f, size.height * 0.25f)
-            lineTo(size.width * 0.68f, size.height * 0.25f)
-            lineTo(size.width * 0.40f, size.height * 0.50f)
-            lineTo(size.width * 0.68f, size.height * 0.75f)
-            moveTo(size.width * 0.24f, size.height * 0.75f)
-            lineTo(size.width * 0.52f, size.height * 0.50f)
-        }
-        drawPath(
-            path = path,
-            color = Color(0xFF28BCD0),
-            style = Stroke(stroke, cap = StrokeCap.Round, join = StrokeJoin.Round)
-        )
-        drawLine(
-            color = primaryColor,
-            start = Offset(size.width * 0.52f, size.height * 0.50f),
-            end = Offset(size.width * 0.80f, size.height * 0.25f),
-            strokeWidth = stroke,
-            cap = StrokeCap.Round
-        )
-    }
+    Image(
+        painter = painterResource(R.drawable.ic_ev_logo),
+        contentDescription = contentDescription,
+        modifier = markModifier
+    )
 }
 
 /** Bottom composer. The parent owns message submission and microphone behavior. */

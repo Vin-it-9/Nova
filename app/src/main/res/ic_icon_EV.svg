@@ -1,0 +1,632 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" role="img" aria-labelledby="ev-logo-title ev-logo-desc">
+  <title id="ev-logo-title">EV — AI Assistant Logo</title>
+  <desc id="ev-logo-desc">A geometric emblem for the EV AI assistant featuring an interlocking crimson E wing and cobalt blue V chevron unified around a metallic silver radial web matrix and luminous neural core.</desc>
+
+  <defs>
+
+    <linearGradient id="bg-plate-surface" x1="12%" y1="8%" x2="88%" y2="92%">
+      <stop offset="0%" stop-color="#182132" />
+      <stop offset="50%" stop-color="#111722" />
+      <stop offset="100%" stop-color="#0B0F17" />
+    </linearGradient>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="100%" height="100%" role="img" aria-labelledby="ev-logo-title ev-logo-desc">
+          <title id="ev-logo-title">EV — AI Assistant Logo</title>
+          <desc id="ev-logo-desc">A geometric emblem for the EV AI assistant featuring an interlocking crimson E wing and cobalt blue V chevron unified around a metallic silver radial web matrix and luminous neural core.</desc>
+
+          <defs>
+
+
+
+              <linearGradient id="bg-plate-surface" x1="12%" y1="8%" x2="88%" y2="92%">
+                  <stop offset="0%" stop-color="#182132" />
+                  <stop offset="50%" stop-color="#111722" />
+                  <stop offset="100%" stop-color="#0B0F17" />
+              </linearGradient>
+
+              <radialGradient id="bg-ambient-glow" cx="50%" cy="50%" r="48%" fx="46%" fy="46%">
+                  <stop offset="0%" stop-color="#1765C0" stop-opacity="0.22" />
+                  <stop offset="55%" stop-color="#C91F32" stop-opacity="0.08" />
+                  <stop offset="100%" stop-color="#111722" stop-opacity="0" />
+              </radialGradient>
+
+              <linearGradient id="bg-plate-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#D7DEE7" stop-opacity="0.28" />
+                  <stop offset="50%" stop-color="#1765C0" stop-opacity="0.12" />
+                  <stop offset="100%" stop-color="#111722" stop-opacity="0.45" />
+              </linearGradient>
+
+
+
+
+              <radialGradient id="chassis-dark-well" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#0B0F17" />
+                  <stop offset="72%" stop-color="#111722" />
+                  <stop offset="100%" stop-color="#1B2536" />
+              </radialGradient>
+
+              <linearGradient id="silver-metallic-primary" x1="15%" y1="10%" x2="85%" y2="90%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="38%" stop-color="#D7DEE7" />
+                  <stop offset="78%" stop-color="#9AA8B8" />
+                  <stop offset="100%" stop-color="#D7DEE7" />
+              </linearGradient>
+
+              <linearGradient id="silver-metallic-core" x1="20%" y1="15%" x2="80%" y2="85%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="52%" stop-color="#D7DEE7" />
+                  <stop offset="100%" stop-color="#8B99AA" />
+              </linearGradient>
+
+
+
+
+              <linearGradient id="red-suit-primary" x1="18%" y1="12%" x2="82%" y2="88%">
+                  <stop offset="0%" stop-color="#F04452" />
+                  <stop offset="48%" stop-color="#C91F32" />
+                  <stop offset="100%" stop-color="#8F1120" />
+              </linearGradient>
+
+              <linearGradient id="red-suit-crown-highlight" x1="10%" y1="15%" x2="75%" y2="75%">
+                  <stop offset="0%" stop-color="#FF6B77" />
+                  <stop offset="35%" stop-color="#F04452" />
+                  <stop offset="100%" stop-color="#C91F32" />
+              </linearGradient>
+
+              <linearGradient id="red-suit-inner-bevel" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#C91F32" />
+                  <stop offset="100%" stop-color="#780D19" />
+              </linearGradient>
+
+
+
+
+              <linearGradient id="blue-suit-primary" x1="22%" y1="16%" x2="84%" y2="90%">
+                  <stop offset="0%" stop-color="#2B82E8" />
+                  <stop offset="45%" stop-color="#1765C0" />
+                  <stop offset="100%" stop-color="#103C79" />
+              </linearGradient>
+
+              <linearGradient id="blue-suit-ridge-highlight" x1="15%" y1="10%" x2="85%" y2="85%">
+                  <stop offset="0%" stop-color="#5CA4FF" />
+                  <stop offset="40%" stop-color="#1765C0" />
+                  <stop offset="100%" stop-color="#103C79" />
+              </linearGradient>
+
+              <linearGradient id="blue-suit-inner-bevel" x1="20%" y1="10%" x2="85%" y2="90%">
+                  <stop offset="0%" stop-color="#1765C0" />
+                  <stop offset="100%" stop-color="#0A2650" />
+              </linearGradient>
+
+
+
+
+              <linearGradient id="core-spark-white" x1="20%" y1="20%" x2="80%" y2="80%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="70%" stop-color="#EBF0F6" />
+                  <stop offset="100%" stop-color="#D7DEE7" />
+              </linearGradient>
+          </defs>
+
+
+
+
+
+          <!--  <g id="optional-background-plate">-->
+          <!--    <rect x="72" y="72" width="880" height="880" rx="208" fill="url(#bg-plate-surface)" />-->
+          <!--    <circle cx="512" cy="512" r="410" fill="url(#bg-ambient-glow)" />-->
+          <!--    <rect x="75" y="75" width="874" height="874" rx="205" fill="none" stroke="url(#bg-plate-rim)" stroke-width="6" />-->
+          <!--  </g>-->
+
+          <!--  -->
+
+
+
+          <g id="ev-primary-emblem">
+
+
+
+
+
+              <g id="radial-web-chassis">
+
+                  <path id="chassis-outer-shadow-base" fill="#111722" d="
+        M 751 296
+        A 322 322 0 0 0 311 765
+        L 335 785
+        L 526 849
+        Q 544 855 561 845
+        L 791 674
+        A 322 322 0 0 0 773 319
+        Z" />
+
+
+                  <circle cx="512" cy="512" r="252" fill="url(#silver-metallic-primary)" />
+
+
+                  <circle cx="512" cy="512" r="236" fill="url(#chassis-dark-well)" />
+
+
+                  <circle cx="512" cy="512" r="190" fill="none" stroke="url(#silver-metallic-primary)" stroke-width="10" opacity="0.88" />
+
+
+                  <g id="radial-silver-web-spokes" stroke="url(#silver-metallic-primary)" stroke-width="14" stroke-linecap="round">
+
+                      <line x1="512" y1="512" x2="320" y2="362" />
+
+                      <line x1="512" y1="512" x2="320" y2="662" />
+
+                      <line x1="512" y1="512" x2="704" y2="362" />
+
+                      <line x1="512" y1="512" x2="362" y2="704" />
+
+                      <line x1="512" y1="512" x2="544" y2="748" />
+
+                      <line x1="512" y1="512" x2="748" y2="512" />
+                  </g>
+              </g>
+
+
+
+
+
+              <g id="red-e-monogram">
+
+                  <path id="red-e-inner-bevel" fill="url(#red-suit-inner-bevel)" d="
+        M 741 306
+        A 308 308 0 0 0 322 755
+        L 421 629
+        A 148 148 0 0 1 398 590
+        L 286 626
+        A 238 238 0 0 1 274 550
+        L 382 550
+        L 420 512
+        L 382 474
+        L 274 474
+        A 238 238 0 0 1 324 358
+        L 408 404
+        A 148 148 0 0 1 622 413
+        Z" />
+
+
+                  <path id="red-e-primary-body" fill="url(#red-suit-primary)" d="
+        M 741 306
+        A 308 308 0 0 0 322 755
+        L 406 648
+        L 368 606
+        L 268 638
+        A 256 256 0 0 1 256 544
+        L 376 544
+        L 408 512
+        L 376 480
+        L 256 480
+        A 256 256 0 0 1 308 344
+        L 398 394
+        A 164 164 0 0 1 634 402
+        Z" />
+
+
+                  <path id="red-e-crown-highlight" fill="url(#red-suit-crown-highlight)" d="
+        M 741 306
+        A 308 308 0 0 0 218 604
+        L 257 592
+        A 268 268 0 0 1 711 333
+        Z" />
+
+
+                  <path id="red-e-bridge-highlight" fill="#F04452" d="
+        M 236 512
+        L 256 480
+        L 376 480
+        L 408 512
+        Z" />
+
+
+                  <path id="red-e-silver-chamfer" fill="url(#silver-metallic-primary)" d="
+        M 622 413
+        L 741 306
+        L 731 296
+        L 614 404
+        Z" opacity="0.9" />
+              </g>
+
+
+
+
+
+              <g id="blue-v-monogram">
+
+                  <path id="blue-v-inner-bevel" fill="url(#blue-suit-inner-bevel)" d="
+        M 762 329
+        A 308 308 0 0 1 780 664
+        L 558 832
+        Q 544 842 528 834
+        L 346 774
+        L 445 648
+        L 544 712
+        L 634 596
+        L 660 512
+        L 643 436
+        Z" />
+
+
+                  <path id="blue-v-primary-body" fill="url(#blue-suit-primary)" d="
+        M 762 329
+        A 308 308 0 0 1 780 664
+        L 558 832
+        Q 544 842 528 834
+        L 346 774
+        L 431 666
+        L 544 738
+        L 652 604
+        L 678 512
+        L 658 422
+        Z" />
+
+
+                  <path id="blue-v-valley-ridge" fill="url(#blue-suit-ridge-highlight)" d="
+        M 445 648
+        L 544 712
+        L 634 596
+        L 660 512
+        L 643 436
+        L 672 410
+        L 692 512
+        L 664 614
+        L 544 756
+        L 421 678
+        Z" />
+
+
+                  <path id="blue-v-outer-wing-facet" fill="#103C79" d="
+        M 762 329
+        A 308 308 0 0 1 780 664
+        L 558 832
+        L 550 794
+        L 744 646
+        A 268 268 0 0 0 730 358
+        Z" />
+
+
+                  <path id="blue-v-silver-chamfer" fill="url(#silver-metallic-primary)" d="
+        M 445 648
+        L 346 774
+        L 356 782
+        L 454 656
+        Z" opacity="0.9" />
+              </g>
+
+
+
+
+
+              <g id="central-ai-core">
+
+                  <circle cx="512" cy="512" r="134" fill="#111722" />
+
+
+                  <circle cx="512" cy="512" r="120" fill="url(#silver-metallic-core)" />
+
+
+                  <circle cx="512" cy="512" r="96" fill="#111722" />
+
+
+                  <path id="core-iris-red" fill="url(#red-suit-crown-highlight)" d="
+        M 512 430
+        A 82 82 0 0 0 512 594
+        L 492 512
+        Z" />
+
+
+                  <path id="core-iris-blue" fill="url(#blue-suit-ridge-highlight)" d="
+        M 512 430
+        A 82 82 0 0 1 512 594
+        L 532 512
+        Z" />
+
+
+                  <path id="core-neural-spark" fill="url(#core-spark-white)" d="
+        M 512 424
+        C 524 476 536 488 588 512
+        C 536 536 524 548 512 600
+        C 500 548 488 536 436 512
+        C 488 488 500 476 512 424
+        Z" />
+
+
+                  <polygon points="512,484 540,512 512,540 484,512" fill="#FFFFFF" />
+              </g>
+
+          </g>
+      </svg>
+    <radialGradient id="bg-ambient-glow" cx="50%" cy="50%" r="48%" fx="46%" fy="46%">
+      <stop offset="0%" stop-color="#1765C0" stop-opacity="0.22" />
+      <stop offset="55%" stop-color="#C91F32" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#111722" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="bg-plate-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D7DEE7" stop-opacity="0.28" />
+      <stop offset="50%" stop-color="#1765C0" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#111722" stop-opacity="0.45" />
+    </linearGradient>
+
+
+
+
+    <radialGradient id="chassis-dark-well" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0B0F17" />
+      <stop offset="72%" stop-color="#111722" />
+      <stop offset="100%" stop-color="#1B2536" />
+    </radialGradient>
+
+    <linearGradient id="silver-metallic-primary" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="38%" stop-color="#D7DEE7" />
+      <stop offset="78%" stop-color="#9AA8B8" />
+      <stop offset="100%" stop-color="#D7DEE7" />
+    </linearGradient>
+
+    <linearGradient id="silver-metallic-core" x1="20%" y1="15%" x2="80%" y2="85%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="52%" stop-color="#D7DEE7" />
+      <stop offset="100%" stop-color="#8B99AA" />
+    </linearGradient>
+
+
+
+
+    <linearGradient id="red-suit-primary" x1="18%" y1="12%" x2="82%" y2="88%">
+      <stop offset="0%" stop-color="#F04452" />
+      <stop offset="48%" stop-color="#C91F32" />
+      <stop offset="100%" stop-color="#8F1120" />
+    </linearGradient>
+
+    <linearGradient id="red-suit-crown-highlight" x1="10%" y1="25%" x2="75%" y2="75%">
+      <stop offset="0%" stop-color="#FF6B77" />
+      <stop offset="35%" stop-color="#F04452" />
+      <stop offset="100%" stop-color="#C91F32" />
+    </linearGradient>
+
+    <linearGradient id="red-suit-inner-bevel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C91F32" />
+      <stop offset="100%" stop-color="#780D19" />
+    </linearGradient>
+
+
+
+
+    <linearGradient id="blue-suit-primary" x1="22%" y1="16%" x2="84%" y2="90%">
+      <stop offset="0%" stop-color="#2B82E8" />
+      <stop offset="45%" stop-color="#1765C0" />
+      <stop offset="100%" stop-color="#103C79" />
+    </linearGradient>
+
+    <linearGradient id="blue-suit-ridge-highlight" x1="15%" y1="10%" x2="85%" y2="85%">
+      <stop offset="0%" stop-color="#5CA4FF" />
+      <stop offset="40%" stop-color="#1765C0" />
+      <stop offset="100%" stop-color="#103C79" />
+    </linearGradient>
+
+    <linearGradient id="blue-suit-inner-bevel" x1="20%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#1765C0" />
+      <stop offset="100%" stop-color="#0A2650" />
+    </linearGradient>
+
+    <linearGradient id="core-spark-white" x1="20%" y1="20%" x2="80%" y2="80%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="70%" stop-color="#EBF0F6" />
+      <stop offset="100%" stop-color="#D7DEE7" />
+    </linearGradient>
+
+  </defs>
+
+
+
+<!--  <g id="optional-background-plate">-->
+<!--    <rect x="72" y="72" width="880" height="880" rx="208" fill="url(#bg-plate-surface)" />-->
+<!--    <circle cx="512" cy="512" r="410" fill="url(#bg-ambient-glow)" />-->
+<!--    <rect x="75" y="75" width="874" height="874" rx="205" fill="none" stroke="url(#bg-plate-rim)" stroke-width="6" />-->
+<!--  </g>-->
+
+
+
+
+  <g id="ev-primary-emblem">
+    <g id="radial-web-chassis">
+
+      <path id="chassis-outer-shadow-base" fill="#111722" d="
+        M 751 296
+        A 322 322 0 0 0 311 765
+        L 335 785
+        L 526 849
+        Q 544 855 561 845
+        L 791 674
+        A 322 322 0 0 0 773 319
+        Z" />
+
+
+      <circle cx="512" cy="512" r="252" fill="url(#silver-metallic-primary)" />
+
+
+      <circle cx="512" cy="512" r="236" fill="url(#chassis-dark-well)" />
+
+
+      <circle cx="512" cy="512" r="190" fill="none" stroke="url(#silver-metallic-primary)" stroke-width="10" opacity="0.88" />
+
+
+      <g id="radial-silver-web-spokes" stroke="url(#silver-metallic-primary)" stroke-width="14" stroke-linecap="round">
+
+        <line x1="512" y1="512" x2="320" y2="362" />
+
+        <line x1="512" y1="512" x2="320" y2="662" />
+
+        <line x1="512" y1="512" x2="704" y2="362" />
+
+        <line x1="512" y1="512" x2="362" y2="704" />
+
+        <line x1="512" y1="512" x2="544" y2="748" />
+
+        <line x1="512" y1="512" x2="848" y2="512" />
+      </g>
+    </g>
+
+
+
+    <g id="red-e-monogram">
+
+      <path id="red-e-inner-bevel" fill="url(#red-suit-inner-bevel)" d="
+        M 741 306
+        A 308 308 0 0 0 322 755
+        L 421 629
+        A 148 148 0 0 1 398 590
+        L 286 626
+        A 238 238 0 0 1 274 550
+        L 382 550
+        L 420 512
+        L 382 474
+        L 274 474
+        A 238 238 0 0 1 324 358
+        L 408 404
+        A 148 148 0 0 1 622 413
+        Z" />
+
+
+      <path id="red-e-primary-body" fill="url(#red-suit-primary)" d="
+        M 741 306
+        A 308 308 0 0 0 322 755
+        L 406 648
+        L 368 606
+        L 268 638
+        A 256 256 0 0 1 256 544
+        L 376 544
+        L 408 512
+        L 376 480
+        L 256 480
+        A 256 256 0 0 1 308 344
+        L 398 394
+        A 164 164 0 0 1 634 402
+        Z" />
+
+
+      <path id="red-e-crown-highlight" fill="url(#red-suit-crown-highlight)" d="
+        M 741 306
+        A 308 308 0 0 0 218 584
+        L 257 492
+        A 268 268 0 0 1 711 333
+        Z" />
+
+
+      <path id="red-e-bridge-highlight" fill="#F04452" d="
+        M 236 512
+        L 256 480
+        L 376 480
+        L 408 512
+        Z" />
+
+
+      <path id="red-e-silver-chamfer" fill="url(#silver-metallic-primary)" d="
+        M 622 413
+        L 741 306
+        L 731 296
+        L 614 404
+        Z" opacity="0.9" />
+    </g>
+
+
+    <g id="blue-v-monogram">
+
+      <path id="blue-v-inner-bevel" fill="url(#blue-suit-inner-bevel)" d="
+        M 762 329
+        A 308 308 0 0 1 780 664
+        L 558 832
+        Q 544 842 528 834
+        L 346 774
+        L 445 648
+        L 544 712
+        L 634 596
+        L 660 512
+        L 643 436
+        Z" />
+
+
+      <path id="blue-v-primary-body" fill="url(#blue-suit-primary)" d="
+        M 762 329
+        A 308 308 0 0 1 780 664
+        L 558 832
+        Q 544 842 528 834
+        L 346 774
+        L 431 666
+        L 544 738
+        L 652 604
+        L 678 512
+        L 658 422
+        Z" />
+
+
+      <path id="blue-v-valley-ridge" fill="url(#blue-suit-ridge-highlight)" d="
+        M 445 648
+        L 544 712
+        L 634 596
+        L 660 512
+        L 643 436
+        L 672 410
+        L 692 512
+        L 664 614
+        L 544 756
+        L 421 678
+        Z" />
+
+
+      <path id="blue-v-outer-wing-facet" fill="#103C79" d="
+        M 762 329
+        A 308 308 0 0 1 780 664
+        L 558 832
+        L 550 794
+        L 744 646
+        A 268 268 0 0 0 730 358
+        Z" />
+
+
+      <path id="blue-v-silver-chamfer" fill="url(#silver-metallic-primary)" d="
+        M 445 648
+        L 346 774
+        L 356 782
+        L 454 656
+        Z" opacity="0.9" />
+    </g>
+
+
+
+      <g id="central-ai-core">
+
+<!--          <circle cx="512" cy="512" r="134" fill="#111722" />-->
+
+          <circle cx="512" cy="512" r="110" fill="url(#silver-metallic-core)" />
+
+          <circle cx="512" cy="512" r="99" fill="#111722" />
+
+
+          <path id="core-iris-red" fill="url(#red-suit-crown-highlight)" d="
+        M 512 430
+        A 82 82 0 0 0 512 594
+        L 492 512
+        Z" />
+
+
+          <path id="core-iris-blue" fill="url(#blue-suit-ridge-highlight)" d="
+        M 512 430
+        A 82 82 0 0 1 512 594
+        L 532 512
+        Z" />
+
+          <path id="core-neural-spark" fill="url(#core-spark-white)" d="
+        M 512 424
+        C 524 476 536 488 594 512
+        C 536 536 524 548 512 600
+        C 500 548 488 536 430 512
+        C 488 498 500 476 512 424
+        Z" />
+
+      </g>
+  </g>
+</svg>
