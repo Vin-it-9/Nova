@@ -1,7 +1,3 @@
 <resources>
-    <string name="app_name">Nova</string>
-    <string name="assistant_notification_title">Nova Assistant</string>
-    <string name="assistant_notification_text">Assistant runtime active</string>
-    <string name="assistant_notification_channel_name">Assistant Runtime</string>
-    <string name="assistant_notification_channel_description">Persistent assistant runtime channel</string>
+    <string name="app_name">EV</string>
 </resources>

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.nova.ai.assistant"
+    namespace = "com.ev.ai.assistant"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.nova.ai.assistant"
+        applicationId = "com.ev.ai.assistant"
         minSdk = 35
         targetSdk = 35
         versionCode = 1

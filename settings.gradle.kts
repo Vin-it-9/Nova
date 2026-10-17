@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Nova"
+rootProject.name = "EV"
 include(":app")

@@ -48,7 +48,7 @@ void DispatchNativeCallback(const std::string& type, const std::string& payload)
         didAttach = true;
     }
 
-    jclass bridgeClass = env->FindClass("com/nova/ai/assistant/nativecore/NativeBridge");
+    jclass bridgeClass = env->FindClass("com/ev/ai/assistant/nativecore/NativeBridge");
     if (bridgeClass != nullptr) {
         jmethodID callbackMethod = env->GetStaticMethodID(
                 bridgeClass,
@@ -97,14 +97,14 @@ void StopWorkerIfRunning() {
 }  // namespace
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_com_nova_ai_assistant_nativecore_NativeBridge_nativeRuntimePingInternal(
+Java_com_ev_ai_assistant_nativecore_NativeBridge_nativeRuntimePingInternal(
         JNIEnv*,
         jobject) {
     return JNI_TRUE;
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_com_nova_ai_assistant_nativecore_NativeBridge_nativeHandleRequest(
+Java_com_ev_ai_assistant_nativecore_NativeBridge_nativeHandleRequest(
         JNIEnv* env,
         jobject,
         jstring action,
