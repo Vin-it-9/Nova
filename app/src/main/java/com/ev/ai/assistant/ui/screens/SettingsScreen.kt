@@ -49,7 +49,6 @@ fun SettingsScreen(
     val fullVoiceResponses by preferences.fullVoiceResponsesState
     val soundFeedback by preferences.soundFeedbackState
     val useWhileLocked by preferences.useWhileLockedState
-    val newsAndOffers by preferences.newsAndOffersState
 
     Column(
         modifier = Modifier
