@@ -104,7 +104,7 @@ object EvActionExecutor {
             // ── Device Control ──
             is EvIntent.LockScreen -> executeLockScreen(context)
             is EvIntent.TakeScreenshot -> executeTakeScreenshot(context)
-            is EvIntent.OpenCamera -> executeOpenCamera(context)
+            is EvIntent.OpenCamera -> executeOpenCamera(context, intent)
 
             // ── Communication ──
             is EvIntent.MakeCall -> executeMakeCall(context, intent)
@@ -145,6 +145,7 @@ object EvActionExecutor {
 
             // ── Navigation ──
             is EvIntent.OpenMaps -> executeOpenMaps(context, intent)
+            is EvIntent.NearbySearch -> executeNearbySearch(context, intent)
             is EvIntent.GetDirections -> executeGetDirections(context, intent)
 
             // ── Conversation & Assistant ──
@@ -1112,19 +1113,59 @@ object EvActionExecutor {
         }
     }
 
-    private fun executeOpenCamera(context: Context): EvExecutionResult {
+    private fun executeOpenCamera(context: Context, intent: EvIntent.OpenCamera): EvExecutionResult {
         return try {
+            val mode = intent.mode
+            val facing = intent.facing
             val pm = context.packageManager
-            val cameraIntent = pm.getLaunchIntentForPackage("com.sec.android.app.camera")
-                    ?: pm.getLaunchIntentForPackage("com.android.camera")
-                    ?: Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+
+            // Build the preferred intent actions for the requested mode/facing.
+            // There is no MediaStore constant for a front-facing still camera, so
+            // the well-known action string is used directly (honoured by the
+            // common camera apps) and the facing extra is attached below.
+            val wanted = when {
+                mode == "video" -> listOf(
+                    MediaStore.INTENT_ACTION_VIDEO_CAMERA,
+                    MediaStore.ACTION_VIDEO_CAPTURE
+                )
+                facing == "front" -> listOf(
+                    "android.media.action.STILL_IMAGE_CAMERA_FRONT",
+                    MediaStore.ACTION_IMAGE_CAPTURE
+                )
+                else -> listOf(
+                    MediaStore.ACTION_IMAGE_CAPTURE,
+                    MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA
+                )
+            }
+            // OEM camera apps only make sense for the default (rear, still) mode —
+            // they ignore facing/mode actions.
+            val oemLaunch = if (mode == "still" && facing != "front") {
+                listOfNotNull(
+                    pm.getLaunchIntentForPackage("com.sec.android.app.camera"),
+                    pm.getLaunchIntentForPackage("com.android.camera")
+                )
+            } else emptyList()
+
+            val cameraIntent = (wanted.asSequence().map { Intent(it) } + oemLaunch.asSequence())
+                .firstOrNull { pm.resolveActivity(it, 0) != null }
+                ?: Intent(wanted.first())
             cameraIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            if (facing == "front") {
+                // Widely honoured extras that open the selfie camera.
+                cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1)
+                cameraIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true)
+            }
             context.startActivity(cameraIntent)
-            val msg = "Opening camera..."
-            EvExecutionResult(true, msg, msg, EvIntent.OpenCamera)
+
+            val msg = when {
+                mode == "video" -> "Opening camera to record a video..."
+                facing == "front" -> "Opening front camera..."
+                else -> "Opening camera..."
+            }
+            EvExecutionResult(true, msg, msg, intent)
         } catch (e: Exception) {
             val msg = "Could not open camera: ${e.localizedMessage ?: "unknown error"}"
-            EvExecutionResult(false, msg, msg, EvIntent.OpenCamera)
+            EvExecutionResult(false, msg, msg, intent)
         }
     }
 
@@ -1952,6 +1993,34 @@ object EvActionExecutor {
             EvExecutionResult(true, msg, msg, intent)
         } catch (e: Exception) {
             val msg = "Could not open maps: ${e.localizedMessage ?: "unknown error"}"
+            EvExecutionResult(false, msg, msg, intent)
+        }
+    }
+
+    /**
+     * Nearby place search — "hospital near me", "nearby hotels". Opens Google
+     * Maps with a live search around the current location.
+     */
+    private fun executeNearbySearch(context: Context, intent: EvIntent.NearbySearch): EvExecutionResult {
+        val query = "${intent.query} near me"
+        val primary = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("https://www.google.com/maps/search/?api=1&query=${Uri.encode(query)}")
+        ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+        val fallback = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse("geo:0,0?q=${Uri.encode(query)}")
+        ).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) }
+        return try {
+            try {
+                context.startActivity(primary)
+            } catch (e: Exception) {
+                context.startActivity(fallback)
+            }
+            val msg = "Showing ${intent.query} near you..."
+            EvExecutionResult(true, msg, msg, intent)
+        } catch (e: Exception) {
+            val msg = "Could not search maps: ${e.localizedMessage ?: "unknown error"}"
             EvExecutionResult(false, msg, msg, intent)
         }
     }

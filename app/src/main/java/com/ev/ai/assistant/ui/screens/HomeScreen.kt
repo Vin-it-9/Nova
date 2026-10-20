@@ -49,6 +49,7 @@ import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.font.FontWeight
 import com.ev.ai.assistant.nlu.EvActionExecutor
 import com.ev.ai.assistant.nlu.EvNluEngine
+import com.ev.ai.assistant.nlu.EvTtsSpeaker
 import com.ev.ai.assistant.ui.AskBar
 import com.ev.ai.assistant.ui.EvIcon
 import com.ev.ai.assistant.ui.EvIconButton
@@ -133,14 +134,13 @@ fun HomeScreen(
         }
     }
 
-    // Warm the speech service in the background so the first mic tap starts instantly
-    // instead of paying Android's recognition-service cold-start cost.
+    // Warm the speech engine WITHOUT touching the microphone (the old warm-up
+    // grabbed the mic on the home page — the mic flickered start/stop on every
+    // app open). The TTS engine, by contrast, is safe to pre-bind: it only
+    // shortens the gap between an answer appearing and the spoken response
+    // starting, and never activates the mic.
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            speechRecognizer.warmUp()
-        }
+        EvTtsSpeaker.warmUpIfEnabled(context)
     }
 
     fun toggleListening() {

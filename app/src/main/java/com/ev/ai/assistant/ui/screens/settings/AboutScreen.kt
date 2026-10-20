@@ -66,7 +66,6 @@ import com.ev.ai.assistant.ui.util.OneUiElevation
 import com.ev.ai.assistant.ui.util.OneUiMotion
 import com.ev.ai.assistant.ui.util.OneUiShapes
 import com.ev.ai.assistant.ui.util.OneUiTypography
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 
 @Composable
 fun AboutScreen(
@@ -207,20 +206,6 @@ fun AboutScreen(
                 AboutActionButton(
                     text = "Terms and conditions",
                     onClick = { showTermsDialog = true },
-                    darkTheme = darkTheme
-                )
-
-                AboutActionButton(
-                    text = "Open source licences",
-                    onClick = {
-                        try {
-                            OssLicensesMenuActivity.setActivityTitle("Open source licences")
-                            val intent = Intent(context, OssLicensesMenuActivity::class.java)
-                            context.startActivity(intent)
-                        } catch (_: Exception) {
-                            // Fallback in case of environment issue
-                        }
-                    },
                     darkTheme = darkTheme
                 )
             }

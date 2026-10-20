@@ -187,4 +187,91 @@ class EvDailyFeaturesTest {
         // Returns null when no time is present at all.
         assertNull(EvNluEngine.parseSpokenTime("turn on bluetooth"))
     }
+
+    // ════════════════════════════════════════════════════════════════════════════
+    // Maps: nearby search + POI destinations
+    // ════════════════════════════════════════════════════════════════════════════
+
+    @Test
+    fun nearbySearchPhrasesAreRecognized() {
+        val queries = mapOf(
+            "hospital near me" to "hospital",
+            "hotels near me" to "hotels",
+            "find an atm near me" to "atm",
+            "coffee shops near me" to "coffee shops",
+            "nearby restaurants" to "restaurants",
+            "closest petrol pump" to "petrol pump"
+        )
+        for ((q, place) in queries) {
+            val intent = EvNluEngine.parse(q)
+            assertTrue("Expected NearbySearch for \"$q\", got $intent", intent is EvIntent.NearbySearch)
+            assertEquals("Wrong query for \"$q\"", place, (intent as EvIntent.NearbySearch).query)
+        }
+    }
+
+    @Test
+    fun specificHotelDestinationKeepsFullName() {
+        val intent = EvNluEngine.parse("locate me to nation 11 hotel")
+        assertTrue("Expected GetDirections, got $intent", intent is EvIntent.GetDirections)
+        assertEquals("nation 11 hotel", (intent as EvIntent.GetDirections).destination)
+    }
+
+    // ════════════════════════════════════════════════════════════════════════════
+    // Camera: open front/back, take a photo, start a recording
+    // ════════════════════════════════════════════════════════════════════════════
+
+    @Test
+    fun cameraOpenPhrasesPickFacingAndMode() {
+        val intent = EvNluEngine.parse("open front camera")
+        assertTrue("Expected OpenCamera, got $intent", intent is EvIntent.OpenCamera)
+        assertEquals("front", (intent as EvIntent.OpenCamera).facing)
+        assertEquals("still", intent.mode)
+
+        val back = EvNluEngine.parse("open back camera")
+        assertTrue(back is EvIntent.OpenCamera)
+        assertEquals("back", (back as EvIntent.OpenCamera).facing)
+
+        val plain = EvNluEngine.parse("open camera")
+        assertTrue(plain is EvIntent.OpenCamera)
+        assertEquals("still", (plain as EvIntent.OpenCamera).mode)
+    }
+
+    @Test
+    fun photoAndSelfiePhrasesOpenCamera() {
+        val queries = listOf(
+            "take a photo",
+            "click pic",
+            "take picture",
+            "capture a photo",
+            "take a selfie"
+        )
+        for (q in queries) {
+            val intent = EvNluEngine.parse(q)
+            assertTrue("Expected OpenCamera for \"$q\", got $intent", intent is EvIntent.OpenCamera)
+            assertEquals("still", (intent as EvIntent.OpenCamera).mode)
+        }
+        // A selfie must use the front camera.
+        assertEquals(
+            "front",
+            (EvNluEngine.parse("take a selfie") as EvIntent.OpenCamera).facing
+        )
+    }
+
+    @Test
+    fun videoRecordingPhrasesOpenVideoCamera() {
+        for (q in listOf("record video", "start video recording", "start recording")) {
+            val intent = EvNluEngine.parse(q)
+            assertTrue("Expected OpenCamera for \"$q\", got $intent", intent is EvIntent.OpenCamera)
+            assertEquals("video", (intent as EvIntent.OpenCamera).mode)
+        }
+    }
+
+    @Test
+    fun cameraPhrasesDoNotHijackOtherCommands() {
+        // Notes, screenshots and alarms must never fall into the camera handler.
+        assertTrue(EvNluEngine.parse("take a note") is EvIntent.CreateNote)
+        assertTrue(EvNluEngine.parse("take a screenshot") is EvIntent.TakeScreenshot)
+        assertTrue(EvNluEngine.parse("set an alarm for 7 am") is EvIntent.SetAlarm)
+        assertTrue(EvNluEngine.parse("record a reminder for gym") is EvIntent.CreateReminder)
+    }
 }

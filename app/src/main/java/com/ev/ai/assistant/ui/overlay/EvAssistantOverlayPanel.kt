@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.ev.ai.assistant.nlu.EvActionExecutor
 import com.ev.ai.assistant.nlu.EvNluEngine
+import com.ev.ai.assistant.nlu.EvTtsSpeaker
 import com.ev.ai.assistant.ui.EvIcon
 import com.ev.ai.assistant.ui.EvIconButton
 import com.ev.ai.assistant.ui.SpeechRecognizerController
@@ -157,6 +158,8 @@ fun EvAssistantOverlayPanel(
 
     // Auto-start speech recognition when overlay first appears
     LaunchedEffect(Unit) {
+        // Warm TTS in parallel so the first answer speaks without engine lag.
+        EvTtsSpeaker.warmUpIfEnabled(context)
         if (hasMicPermission) {
             delay(300L) // small grace period before listening
             speechRecognizer.start()

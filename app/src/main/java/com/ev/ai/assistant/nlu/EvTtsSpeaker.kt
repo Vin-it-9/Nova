@@ -4,6 +4,7 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.speech.tts.Voice
 import android.util.Log
+import com.ev.ai.assistant.data.preferences.EvPreferences
 import java.util.Locale
 
 /**
@@ -154,6 +155,24 @@ class EvTtsSpeaker(context: Context) {
         fun getInstance(context: Context): EvTtsSpeaker {
             return instance ?: synchronized(this) {
                 instance ?: EvTtsSpeaker(context).also { instance = it }
+            }
+        }
+
+        /**
+         * Pre-binds the TTS engine the moment the app opens. The constructor
+         * returns immediately — engine binding and voice selection happen on a
+         * background callback — so startup is never blocked, but by the time the
+         * assistant answers, the engine is warm and speech starts without the
+         * usual engine-bind gap. Does nothing when both voice toggles are off,
+         * so a muted assistant never spins up TTS at all.
+         */
+        fun warmUpIfEnabled(context: Context) {
+            try {
+                val prefs = EvPreferences.getInstance(context.applicationContext)
+                if (prefs.soundFeedback || prefs.fullVoiceResponses) {
+                    getInstance(context)
+                }
+            } catch (_: Exception) {
             }
         }
     }

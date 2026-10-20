@@ -23,6 +23,7 @@ import com.ev.ai.assistant.ui.screens.HomeScreen
 import com.ev.ai.assistant.ui.screens.SettingsScreen
 import com.ev.ai.assistant.ui.screens.settings.AboutScreen
 import com.ev.ai.assistant.ui.screens.settings.PermissionsScreen
+import com.ev.ai.assistant.ui.screens.settings.PrivacyScreen
 import com.ev.ai.assistant.ui.screens.settings.VoiceWakeUpScreen
 import com.ev.ai.assistant.ui.util.EvTheme
 import com.ev.ai.assistant.ui.util.OneUiMotion
@@ -32,7 +33,8 @@ enum class AppScreen {
     Settings,
     About,
     Permissions,
-    VoiceWakeUp
+    VoiceWakeUp,
+    Privacy
 }
 
 @Composable
@@ -45,6 +47,7 @@ fun EvApp() {
             AppScreen.VoiceWakeUp -> AppScreen.Settings
             AppScreen.Permissions -> AppScreen.Settings
             AppScreen.About -> AppScreen.Settings
+            AppScreen.Privacy -> AppScreen.Settings
             AppScreen.Settings -> AppScreen.Home
             AppScreen.Home -> AppScreen.Home
         }
@@ -115,7 +118,8 @@ fun EvApp() {
                         onBack = { currentScreen = AppScreen.Home },
                         onOpenAbout = { currentScreen = AppScreen.About },
                         onOpenPermissions = { currentScreen = AppScreen.Permissions },
-                        onOpenVoiceWakeUp = { currentScreen = AppScreen.VoiceWakeUp }
+                        onOpenVoiceWakeUp = { currentScreen = AppScreen.VoiceWakeUp },
+                        onOpenPrivacy = { currentScreen = AppScreen.Privacy }
                     )
                     AppScreen.About -> AboutScreen(
                         onBack = { currentScreen = AppScreen.Settings }
@@ -124,6 +128,9 @@ fun EvApp() {
                         onBack = { currentScreen = AppScreen.Settings }
                     )
                     AppScreen.VoiceWakeUp -> VoiceWakeUpScreen(
+                        onBack = { currentScreen = AppScreen.Settings }
+                    )
+                    AppScreen.Privacy -> PrivacyScreen(
                         onBack = { currentScreen = AppScreen.Settings }
                     )
                 }

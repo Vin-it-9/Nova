@@ -336,7 +336,20 @@ sealed interface EvIntent {
 
     object TakeScreenshot : EvIntent
 
-    object OpenCamera : EvIntent
+    /**
+     * Opens the camera. [facing] is "front", "back" or "default"; [mode] is
+     * "still" (photo) or "video" (recording).
+     */
+    data class OpenCamera(
+        val facing: String = "back",
+        val mode: String = "still"
+    ) : EvIntent
+
+    /**
+     * Nearby place search, e.g. "hospital near me" → opens Google Maps with the
+     * query "hospital near me" so the user sees live results around them.
+     */
+    data class NearbySearch(val query: String) : EvIntent
 }
 
 /** Result produced by executing an intent. */

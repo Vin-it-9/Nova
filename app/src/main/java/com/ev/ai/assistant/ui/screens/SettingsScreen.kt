@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.ev.ai.assistant.data.preferences.rememberEvPreferences
-import com.ev.ai.assistant.ui.AccountCard
 import com.ev.ai.assistant.ui.EvIcon
 import com.ev.ai.assistant.ui.EvIconButton
 import com.ev.ai.assistant.ui.SettingsCard
@@ -40,7 +39,8 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onOpenAbout: () -> Unit = {},
     onOpenPermissions: () -> Unit = {},
-    onOpenVoiceWakeUp: () -> Unit = {}
+    onOpenVoiceWakeUp: () -> Unit = {},
+    onOpenPrivacy: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val darkTheme = isSystemInDarkTheme()
@@ -54,7 +54,6 @@ fun SettingsScreen(
     val fullVoiceResponses by preferences.fullVoiceResponsesState
     val soundFeedback by preferences.soundFeedbackState
     val useWhileLocked by preferences.useWhileLockedState
-    val newsAndOffers by preferences.newsAndOffersState
 
     Column(
         modifier = Modifier
@@ -79,8 +78,6 @@ fun SettingsScreen(
                 modifier = Modifier.padding(start = OneUiDimensions.Space3)
             )
         }
-
-        AccountCard()
 
         SettingsSectionTitle("Wake up EV")
         SettingsCard {
@@ -139,15 +136,7 @@ fun SettingsScreen(
 
         SettingsSectionTitle("Privacy")
         SettingsCard {
-            SettingsRow("Privacy settings")
-            SettingsDivider()
-            SettingsRow("Privacy Notice")
-            SettingsDivider()
-            ToggleRow(
-                title = "Get news and special offers",
-                initiallyChecked = newsAndOffers,
-                onCheckedChange = { preferences.newsAndOffers = it }
-            )
+            SettingsRow("Privacy Notice", onClick = onOpenPrivacy)
             SettingsDivider()
             SettingsRow("Permissions", onClick = onOpenPermissions)
         }

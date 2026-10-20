@@ -110,6 +110,13 @@ object EvNluEngine {
             return EvIntent.OpenMaps()
         }
 
+        // Nearby place search: "hospital near me", "find an atm near me",
+        // "nearby hotels", "closest coffee shop".
+        nearbyQuery(low)?.let { place -> return EvIntent.NearbySearch(place) }
+
+        // Camera: open front/back camera, take a photo, start a video recording.
+        cameraIntent(low)?.let { intent -> return intent }
+
         if (low.startsWith("search for ") || low.startsWith("google ") ||
             low.startsWith("look up ") || low.startsWith("search google for ")
         ) {
@@ -323,7 +330,7 @@ object EvNluEngine {
             if (!explicitApp) {
                 when {
                     name == "maps" || name == "google maps" -> return EvIntent.OpenMaps()
-                    name == "camera" -> return EvIntent.OpenCamera
+                    name == "camera" -> return EvIntent.OpenCamera()
                     // Let the NLU pipeline route settings (and settings sub-panels such
                     // as "open wifi settings") to the dedicated OpenSettings intents.
                     name == "settings" || name.endsWith(" settings") -> return null
@@ -538,7 +545,7 @@ object EvNluEngine {
         }
         intentName == "device.lock_screen" -> EvIntent.LockScreen
         intentName == "device.take_screenshot" -> EvIntent.TakeScreenshot
-        intentName == "device.open_camera" -> EvIntent.OpenCamera
+        intentName == "device.open_camera" -> EvIntent.OpenCamera()
 
         // ── Apps ──
         intentName == "app.open" -> {
@@ -778,6 +785,53 @@ object EvNluEngine {
             }
         }
         return null
+    }
+
+    /**
+     * Extracts a nearby-search subject: "hospital near me" → "hospital",
+     * "find an atm near me" → "atm", "nearby hotels" → "hotels".
+     * Returns null when the query is not a nearby search.
+     */
+    private fun nearbyQuery(low: String): String? {
+        // "<subject> near me / by / here / my location"
+        Regex(
+            """^(?:find\s+(?:an?\s+)?|search\s+(?:for\s+(?:an?\s+)?)?|is\s+there\s+(?:an?\s+)?|show\s+me\s+|where\s+is\s+(?:an?\s+)?|locate\s+)?(.+?)\s+near\s+(?:me|by|here|my\s+location|around\s+me)[.!?]*$"""
+        ).find(low)?.let { m ->
+            val subject = m.groupValues[1].trim()
+            if (subject.isNotBlank() && subject !in setOf("what", "which", "where", "are", "is")) {
+                return subject
+            }
+        }
+        // "nearby <subject>" / "closest <subject>" / "nearest <subject>"
+        Regex("""^(?:the\s+)?(?:nearby|closest|nearest)\s+(.+?)[.!?]*$""").find(low)?.let { m ->
+            val subject = m.groupValues[1].trim()
+            if (subject.isNotBlank()) return subject
+        }
+        return null
+    }
+
+    /**
+     * Maps camera phrases to an [EvIntent.OpenCamera]: open front/back camera,
+     * take a photo/selfie, or start a video recording. Returns null otherwise.
+     */
+    private fun cameraIntent(low: String): EvIntent? {
+        // "open camera app" explicitly asks for the application, so let the
+        // app-matching path handle it instead of the capture intents.
+        if (low.contains("camera app")) return null
+        val isCamera = low.contains("camera")
+        val isPhoto = Regex(
+            """\b(?:take|click|snap|capture|shoot)\b.*\b(?:photo|picture|pic|selfie)\b"""
+        ).containsMatchIn(low) || low.contains("selfie")
+        val isVideo = Regex(
+            """\b(?:record|start|begin)\b.*\b(?:video|recording)\b"""
+        ).containsMatchIn(low) && !isPhoto
+        if (!isCamera && !isPhoto && !isVideo) return null
+        val front = low.contains("front") || low.contains("selfie")
+        val video = isVideo && !isPhoto
+        return EvIntent.OpenCamera(
+            facing = if (front) "front" else "back",
+            mode = if (video) "video" else "still"
+        )
     }
 
     /**
