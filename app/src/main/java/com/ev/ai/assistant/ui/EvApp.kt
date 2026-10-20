@@ -10,7 +10,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +24,7 @@ import com.ev.ai.assistant.ui.screens.SettingsScreen
 import com.ev.ai.assistant.ui.screens.settings.AboutScreen
 import com.ev.ai.assistant.ui.screens.settings.PermissionsScreen
 import com.ev.ai.assistant.ui.screens.settings.VoiceWakeUpScreen
-import com.ev.ai.assistant.ui.util.OneUiColors
+import com.ev.ai.assistant.ui.util.EvTheme
 import com.ev.ai.assistant.ui.util.OneUiMotion
 
 enum class AppScreen {
@@ -51,7 +50,7 @@ fun EvApp() {
         }
     }
 
-    MaterialTheme(colorScheme = OneUiColors.colorScheme(darkTheme)) {
+    EvTheme(darkTheme) {
         AnimatedContent(
             targetState = currentScreen,
             label = "one_ui_screen_transition",

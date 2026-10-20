@@ -77,7 +77,8 @@ internal enum class EvIcon {
     ChevronRight,
     Send,
     Info,
-    Check
+    Check,
+    Close
 }
 
 /** A 48 dp minimum-touch-target icon button with restrained press feedback. */
@@ -240,6 +241,11 @@ internal fun EvIcon(
                 drawLine(tint, Offset(w * 0.22f, h * 0.52f), Offset(w * 0.42f, h * 0.72f), stroke, StrokeCap.Round)
                 drawLine(tint, Offset(w * 0.42f, h * 0.72f), Offset(w * 0.78f, h * 0.32f), stroke, StrokeCap.Round)
             }
+
+            EvIcon.Close -> {
+                drawLine(tint, Offset(w * 0.30f, h * 0.30f), Offset(w * 0.70f, h * 0.70f), stroke, StrokeCap.Round)
+                drawLine(tint, Offset(w * 0.70f, h * 0.30f), Offset(w * 0.30f, h * 0.70f), stroke, StrokeCap.Round)
+            }
         }
     }
 }
@@ -275,6 +281,7 @@ internal fun AskBar(
     val keyboardController = LocalSoftwareKeyboardController.current
     val shape = OneUiShapes.Composer
     val hasInput = value.isNotBlank()
+    val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
 
     fun submit() {
         if (hasInput) {
@@ -293,16 +300,12 @@ internal fun AskBar(
         shape = shape,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(
-                alpha = if (androidx.compose.foundation.isSystemInDarkTheme()) {
-                    OneUiElevation.SurfaceAlphaDark
-                } else {
-                    OneUiElevation.SurfaceAlphaLight
-                }
+                alpha = OneUiElevation.surfaceAlpha(darkTheme)
             )
         ),
         border = BorderStroke(
             width = OneUiElevation.Hairline,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = OneUiElevation.BorderAlphaLight)
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = OneUiElevation.borderAlpha(darkTheme))
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = OneUiElevation.Floating)
     ) {
@@ -386,7 +389,7 @@ internal fun AskBar(
                         description = if (isListening) "Stop voice input" else "Use voice input",
                         onClick = onMicrophoneClick,
                         tint = if (isListening) {
-                            OneUiColors.PrimaryLight
+                            MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onSurface
                         }
@@ -545,21 +548,18 @@ internal fun SettingsSectionTitle(
 
 @Composable
 internal fun SettingsCard(content: @Composable () -> Unit) {
+    val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = OneUiShapes.Card,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface.copy(
-                alpha = if (androidx.compose.foundation.isSystemInDarkTheme()) {
-                    OneUiElevation.SurfaceAlphaDark
-                } else {
-                    OneUiElevation.SurfaceAlphaLight
-                }
+                alpha = OneUiElevation.surfaceAlpha(darkTheme)
             )
         ),
         border = BorderStroke(
             width = OneUiElevation.Hairline,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = OneUiElevation.BorderAlphaDark)
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = OneUiElevation.borderAlpha(darkTheme))
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = OneUiElevation.Raised)
     ) {
@@ -747,6 +747,7 @@ internal fun ToggleRow(
 
 @Composable
 internal fun SettingsDivider(modifier: Modifier = Modifier) {
+    val darkTheme = androidx.compose.foundation.isSystemInDarkTheme()
     Spacer(
         modifier
             .fillMaxWidth()
@@ -754,7 +755,7 @@ internal fun SettingsDivider(modifier: Modifier = Modifier) {
             .height(OneUiElevation.Hairline)
             .background(
                 MaterialTheme.colorScheme.outlineVariant.copy(
-                    alpha = OneUiElevation.BorderAlphaDark
+                    alpha = OneUiElevation.borderAlpha(darkTheme)
                 )
             )
     )

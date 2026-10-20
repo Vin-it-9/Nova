@@ -1,6 +1,7 @@
 package com.ev.ai.assistant.ui.util
 
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Shapes
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
@@ -38,4 +39,17 @@ object OneUiShapes {
     // Fully circular components for standard system ripples and media actions
     val IconButton: Shape = RoundedCornerShape(50)
     val Full: Shape = RoundedCornerShape(50)
+
+    /**
+     * The Material 3 shape scale mapped onto One UI corner radii so that any framework
+     * component (dialogs, menus, text fields) automatically matches EV's One UI styling
+     * instead of falling back to Material defaults.
+     */
+    val Material3: Shapes = Shapes(
+        extraSmall = RoundedCornerShape(OneUiDimensions.RadiusThumbnailSmall),
+        small = RoundedCornerShape(OneUiDimensions.RadiusThumbnailSmall),
+        medium = RoundedCornerShape(OneUiDimensions.RadiusThumbnailMedium),
+        large = RoundedCornerShape(OneUiDimensions.RadiusFocusBlockLarge),
+        extraLarge = RoundedCornerShape(OneUiDimensions.RadiusFocusBlockLarge)
+    )
 }

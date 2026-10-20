@@ -26,6 +26,7 @@ import java.util.Locale
 internal class SpeechRecognizerController(
     context: Context,
     private val onTextChanged: (String) -> Unit,
+    private val onFinalText: (String) -> Unit = {},
     private val onListeningChanged: (Boolean) -> Unit,
     private val languageTag: String = Locale.getDefault().toLanguageTag(),
     private val biasingStrings: List<String> = DEFAULT_BIASING_STRINGS,
@@ -53,6 +54,17 @@ internal class SpeechRecognizerController(
     /** Starts one session. Repeated taps during an active session are ignored. */
     fun start() = runOnMain(::startOnMain)
 
+    /**
+     * Primes the speech service so the *first* real tap starts instantly.
+     *
+     * Android binds the recognition service lazily on the first startListening(),
+     * which costs a few hundred milliseconds of cold-start on the very first use.
+     * This performs one throwaway listen and cancels it shortly after, warming the
+     * service without emitting any text (sessionActive stays false, so every
+     * listener callback is ignored by isCurrent()).
+     */
+    fun warmUp() = runOnMain(::warmUpOnMain)
+
     /** Stops audio capture; Android may still deliver the final result afterwards. */
     fun stop() = runOnMain(::stopOnMain)
 
@@ -79,13 +91,46 @@ internal class SpeechRecognizerController(
     }
 
     @MainThread
+    private fun warmUpOnMain() {
+        if (released || sessionActive) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            appContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        if (recognizer == null) {
+            if (initializationFailure != SpeechRecognizerFailure.PERMISSION_DENIED) {
+                initializationFailure = null
+            }
+            initializeRecognizer()
+        }
+        val speechRecognizer = recognizer ?: return
+
+        try {
+            // A throwaway listen; sessionActive stays false so callbacks are ignored.
+            speechRecognizer.setRecognitionListener(createListener(sessionId))
+            speechRecognizer.startListening(createRecognizerIntent())
+            mainHandler.postDelayed({
+                if (!sessionActive && !released) {
+                    try {
+                        speechRecognizer.cancel()
+                    } catch (_: RuntimeException) {
+                    }
+                }
+            }, WARM_UP_LISTEN_MS)
+        } catch (_: SecurityException) {
+        } catch (_: RuntimeException) {
+        }
+    }
+
+    @MainThread
     private fun startOnMain() {
         if (released) {
             notifyErrorSafely(SpeechRecognizerFailure.CLIENT)
             return
         }
         if (sessionActive) return
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
             appContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO) !=
             PackageManager.PERMISSION_GRANTED
@@ -175,8 +220,14 @@ internal class SpeechRecognizerController(
             )
 
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageTag)
+            // Prefer an Indian-English online model when available: it is far more
+            // accurate for names/numbers spoken with an Indian accent.
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, languageTag)
+            putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, false)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
+            putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5)
+            // Return the top hypothesis quickly; don't wait for a long trailing silence.
+            putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, appContext.packageName)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 val terms = biasingStrings
@@ -237,7 +288,7 @@ internal class SpeechRecognizerController(
                 if (text == null) {
                     notifyErrorSafely(SpeechRecognizerFailure.NO_MATCH)
                 } else {
-                    emitText(text)
+                    emitFinalText(text)
                 }
             }
 
@@ -261,6 +312,14 @@ internal class SpeechRecognizerController(
 
         if (corrected.isNotEmpty()) {
             runCatching { onTextChanged(corrected) }
+        }
+    }
+
+    private fun emitFinalText(rawText: String) {
+        val corrected = runCatching { transcriptCorrection(rawText).trim() }
+            .getOrDefault(rawText.trim())
+        if (corrected.isNotEmpty()) {
+            runCatching { onFinalText(corrected) }
         }
     }
 
@@ -352,6 +411,9 @@ internal class SpeechRecognizerController(
 
         /** Limits UI updates from onRmsChanged(). */
         private const val RMS_UPDATE_INTERVAL_MS = 80L
+
+        /** How long the throwaway warm-up listen runs before being cancelled. */
+        private const val WARM_UP_LISTEN_MS = 700L
     }
 }
 

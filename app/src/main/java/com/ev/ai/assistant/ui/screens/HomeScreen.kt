@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -28,12 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -42,6 +46,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.compose.ui.text.font.FontWeight
+import com.ev.ai.assistant.nlu.EvActionExecutor
+import com.ev.ai.assistant.nlu.EvNluEngine
 import com.ev.ai.assistant.ui.AskBar
 import com.ev.ai.assistant.ui.EvIcon
 import com.ev.ai.assistant.ui.EvIconButton
@@ -59,13 +66,30 @@ fun HomeScreen(
 ) {
     var input by rememberSaveable() { mutableStateOf("") }
     var isListening by rememberSaveable() { mutableStateOf(false) }
+    var lastExecutionResult by rememberSaveable() { mutableStateOf<String?>(null) }
+    var lastExecutedQuery by rememberSaveable() { mutableStateOf<String?>(null) }
     val context = LocalContext.current
     val hapticFeedback = LocalHapticFeedback.current
+
+    fun handleQuery(query: String) {
+        val trimmed = query.trim()
+        if (trimmed.isBlank()) return
+        lastExecutedQuery = trimmed
+        val parsedIntent = EvNluEngine.parse(trimmed, context)
+        val result = EvActionExecutor.execute(context, parsedIntent, speakResponse = true)
+        lastExecutionResult = result.userDisplayMessage
+        input = ""
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
 
     val speechRecognizer = remember(context) {
         SpeechRecognizerController(
             context = context,
             onTextChanged = { recognizedText -> input = recognizedText },
+            onFinalText = { recognizedText ->
+                input = recognizedText
+                handleQuery(recognizedText)
+            },
             onListeningChanged = { listening -> isListening = listening }
         )
     }
@@ -80,6 +104,42 @@ fun HomeScreen(
         if (granted) {
             speechRecognizer.start()
             hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+        }
+    }
+
+    // Ask once for the permissions the assistant's features need (calls, SMS,
+    // contacts, calendar, notifications). Each feature also degrades gracefully
+    // when a permission is missing, so denying any of these is not fatal.
+    val featurePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { /* results are handled implicitly by each feature */ }
+
+    LaunchedEffect(Unit) {
+        val needed = listOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR,
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.POST_NOTIFICATIONS
+        ).filter {
+            ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED
+        }
+        if (needed.isNotEmpty()) {
+            featurePermissionLauncher.launch(needed.toTypedArray())
+        }
+    }
+
+    // Warm the speech service in the background so the first mic tap starts instantly
+    // instead of paying Android's recognition-service cold-start cost.
+    LaunchedEffect(Unit) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            speechRecognizer.warmUp()
         }
     }
 
@@ -138,21 +198,27 @@ fun HomeScreen(
         listOf(
             Color(0xFF50BFC8),
             Color(0xFF7FA6E7),
-            Color(0xFFAE96D6)
+            Color(0xFFAE96D6),
+            Color(0xFF79DCE2),
+            Color(0xFF90CAF9)
         )
     } else {
         listOf(
             Color(0xFF79DCE2),
             Color(0xFF8DB9F8),
-            Color(0xFFC7B9ED)
+            Color(0xFFC7B9ED),
+            Color(0xFF80CBC4),
+            Color(0xFF64B5F6)
         )
     }
 
     val suggestions = remember {
         listOf(
-            "How are you?",
+            "Open WhatsApp",
             "Set Alarm at 7:00 AM",
-            "Turn on Bluetooth"
+            "What time is it?",
+            "Turn on Bluetooth",
+            "How are you?"
         )
     }
 
@@ -192,12 +258,13 @@ fun HomeScreen(
         },
         bottomBar = {
             AskBar(
-                input,
-                { input = it },
-                Modifier
+                value = input,
+                onValueChange = { input = it },
+                modifier = Modifier
                     .fillMaxWidth()
                     .imePadding()
                     .navigationBarsPadding(),
+                onSubmit = { handleQuery(input) },
                 onMicrophoneClick = ::toggleListening,
                 isListening = isListening
             )
@@ -217,6 +284,81 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+                // Interactive EV Assistant Response Card
+                if (lastExecutionResult != null) {
+                    Card(
+                        modifier = Modifier
+                            .widthIn(max = 560.dp)
+                            .fillMaxWidth()
+                            .padding(bottom = OneUiDimensions.Space4),
+                        shape = OneUiShapes.OuterContainer,
+                        colors = CardDefaults.cardColors(
+                            containerColor = primaryAccent.copy(alpha = if (darkTheme) 0.16f else 0.10f)
+                        ),
+                        border = BorderStroke(
+                            width = OneUiElevation.Hairline,
+                            color = primaryAccent.copy(alpha = 0.35f)
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = OneUiDimensions.CardContentHorizontal,
+                                    vertical = OneUiDimensions.CardContentVertical
+                                )
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(OneUiDimensions.Space2)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                            .clip(OneUiShapes.Full)
+                                            .background(primaryAccent),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = "E",
+                                            color = Color.White,
+                                            style = OneUiTypography.Caption,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    Text(
+                                        text = lastExecutedQuery ?: "E.V. Assistant",
+                                        color = textPrimary,
+                                        style = OneUiTypography.Label,
+                                        fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1
+                                    )
+                                }
+
+                                EvIconButton(
+                                    icon = EvIcon.Back,
+                                    description = "Clear response",
+                                    onClick = { lastExecutionResult = null }
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(OneUiDimensions.Space2))
+
+                            Text(
+                                text = lastExecutionResult ?: "",
+                                color = textPrimary,
+                                style = OneUiTypography.BodyMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
                 Card(
                     modifier = Modifier
                         .widthIn(max = 560.dp)
@@ -295,9 +437,9 @@ fun HomeScreen(
                             suggestions.forEachIndexed { index, suggestion ->
                                 SuggestionPill(
                                     text = suggestion,
-                                    borderColor = suggestionBorderColors[index]
+                                    borderColor = suggestionBorderColors[index % suggestionBorderColors.size]
                                 ) {
-                                    input = suggestion
+                                    handleQuery(suggestion)
                                 }
                             }
                         }

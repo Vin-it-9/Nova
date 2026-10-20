@@ -65,6 +65,9 @@ object OneUiColors {
     val SurfaceLight = Color(0xFFFFFFFF)
     val SurfaceDark = Color(0xFF1A1A1A)
 
+    val CardSurfaceLight = SurfaceLight
+    val CardSurfaceDark = SurfaceDark
+
     val SurfaceVariantLight = Color(0xFFF1F3F5)
     val SurfaceVariantDark = Color(0xFF242424)
 
@@ -231,4 +234,18 @@ object OneUiColors {
                 scrim = Scrim
             )
         }
+}
+
+/**
+ * Pure color aliases providing direct compile-time token bindings.
+ */
+object OneUiPureColors {
+    val CardSurfaceLight = OneUiColors.CardSurfaceLight
+    val CardSurfaceDark = OneUiColors.CardSurfaceDark
+    val TextPrimaryLight = OneUiColors.TextPrimaryLight
+    val TextPrimaryDark = OneUiColors.TextPrimaryDark
+    val BrandPrimary = OneUiColors.BrandPrimary
+    val ControlActive = OneUiColors.ControlActive
+    val BackgroundLight = OneUiColors.BackgroundLight
+    val BackgroundDark = OneUiColors.BackgroundDark
 }

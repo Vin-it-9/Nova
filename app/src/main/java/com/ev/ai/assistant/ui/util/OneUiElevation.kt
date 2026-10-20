@@ -33,4 +33,16 @@ object OneUiElevation {
     // Glassmorphism background alpha used for semi-transparent voice sheets (Bixby/Assistant panel style)
     const val SurfaceAlphaLight = 0.92f // High-density clean viewing surface translucency
     const val SurfaceAlphaDark = 0.86f  // Smooth dark canvas visual blending blend layer
+
+    // --- THEME-AWARE SELECTORS ---
+    // Single source of truth so every surface/border resolves the same alpha for a
+    // given theme instead of hardcoding the light or dark constant at each call site.
+
+    /** Surface translucency for the active theme. */
+    fun surfaceAlpha(darkTheme: Boolean): Float =
+        if (darkTheme) SurfaceAlphaDark else SurfaceAlphaLight
+
+    /** Soft outline stroke alpha for the active theme. */
+    fun borderAlpha(darkTheme: Boolean): Float =
+        if (darkTheme) BorderAlphaDark else BorderAlphaLight
 }

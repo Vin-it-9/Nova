@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Device administrator policy for E.V. Assistant.
+
+    Only the force-lock policy is requested, which is the minimum needed for the
+    "lock screen" voice command to work without root. Nothing else (password
+    constraints, wipe, camera disabling, etc.) is requested.
+-->
+<device-admin>
+    <uses-policies>
+        <force-lock />
+    </uses-policies>
+</device-admin>
